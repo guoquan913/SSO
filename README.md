@@ -1,2 +1,2 @@
 # SSO
-spring security oauth2 server
+spring security oauth2 server && client
