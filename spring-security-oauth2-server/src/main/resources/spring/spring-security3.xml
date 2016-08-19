@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oauth="http://www.springframework.org/schema/security/oauth2"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/security/oauth2
+		http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd
+		http://www.springframework.org/schema/security 
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+	<description> spring-security  认证 相关配置文件  </description>
+
+	<sec:authentication-manager alias="authenticationManager">
+		<sec:authentication-provider user-service-ref="oauth2UserDetailsService" />
+	</sec:authentication-manager>
+
+	<bean id="oauth2UserDetailsService" class="com.gqsoft.framework.oauth2.provider.service.Oauth2UserDetailsService">
+		<constructor-arg index="0" ref="dataSource" />
+	</bean>
+	<sec:http disable-url-rewriting="true" use-expressions="false" authentication-manager-ref="authenticationManager">
+		<sec:form-login authentication-failure-url="/login.jsp?error=1" 
+			default-target-url="/index.jsp" login-page="/login.jsp" login-processing-url="/login.do"
+			password-parameter="password" username-parameter="username" />
+		<sec:logout logout-success-url="/index.jsp" logout-url="/logout.do" />
+		<sec:access-denied-handler error-page="/login.jsp?error=2" />
+		<sec:anonymous />
+	</sec:http>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
+		<constructor-arg>
+			<list>
+				<bean class="org.springframework.security.oauth2.provider.vote.ScopeVoter" />
+				<bean class="org.springframework.security.access.vote.RoleVoter" />
+				<bean class="org.springframework.security.access.vote.AuthenticatedVoter" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+</beans>

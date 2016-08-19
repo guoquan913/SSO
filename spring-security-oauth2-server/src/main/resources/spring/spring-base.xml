@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd 
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-3.2.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	<context:property-placeholder location="classpath:jdbc.properties" />
+	<context:annotation-config />
+	<!-- 使用Annotation自动注册Bean，解决事物失效问题： 在主容器中不扫描@Controller注解，在SpringMvc中只扫描@Controller注解。 -->
+	<context:component-scan base-package="javacommon.base,com.gqsoft.framework.oauth2">
+		<!-- base-package 如果多个，用“,”分隔 -->
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+	<import resource="spring-datasource.xml" />
+	<import resource="spring-transaction.xml" />
+	<import resource="spring-cache.xml" />
+	<import resource="spring-security3-oauth2.xml" />
+	<import resource="spring-security3.xml" />
+	
+</beans>
